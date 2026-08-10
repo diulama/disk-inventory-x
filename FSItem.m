@@ -1098,7 +1098,7 @@ NSString* FSItemLoadingFailedException = @"FSItemLoadingFailedException";
     
     [itemStack release];
     
-	[self recalculateSize:YES updateParent:NO];
+	[self recalculateSize:usePhysicalSize updateParent:NO];
 }
 
 //compare the size of 2 FSItems
@@ -1160,4 +1160,3 @@ NSString* FSItemLoadingFailedException = @"FSItemLoadingFailedException";
 }
 
 @end
-
