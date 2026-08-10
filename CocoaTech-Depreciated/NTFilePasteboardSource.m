@@ -155,7 +155,7 @@
             {
                 if ([uti isEqualToString: (__bridge NSString *)kUTTypeTIFF])
                     [pboard setData:[NSData dataWithContentsOfFile:[url path]] forType:NSTIFFPboardType];
-                else if ( UTTypeConformsTo((__bridge CFStringRef)uti, kUTTypeImage) )
+				else if ( uti != nil && UTTypeConformsTo((__bridge CFStringRef)uti, kUTTypeImage) )
                 {
                     // open the image and return TIFFRepresentation
                     NSImage *image = [[[NSImage alloc] initWithContentsOfFile:[url path]] autorelease];

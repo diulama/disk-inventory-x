@@ -443,18 +443,22 @@ NSString* FSItemLoadingFailedException = @"FSItemLoadingFailedException";
 			break;
 			
 		case OtherSpaceItem:
-            {
-                NSNumber *totalSpace = [[self fileURL] getCachedNumberValue: NSURLVolumeTotalCapacityKey];
-                NSNumber *freeSpace = [[self fileURL] getCachedNumberValue: NSURLVolumeAvailableCapacityKey];
+			{
+				NSNumber *totalSpace = [[self fileURL] getCachedNumberValue: NSURLVolumeTotalCapacityKey];
+				NSNumber *freeSpace = [[self fileURL] getCachedNumberValue: NSURLVolumeAvailableCapacityKey];
 
-                UInt64 totalSpaceVal = totalSpace == nil ? 0 : [totalSpace unsignedLongLongValue];
-                UInt64 freeSpaceVal = freeSpace == nil ? 0 : [freeSpace unsignedLongLongValue];
+				if ( totalSpace != nil && freeSpace != nil )
+				{
+					UInt64 totalSpaceVal = [totalSpace unsignedLongLongValue];
+					UInt64 freeSpaceVal = [freeSpace unsignedLongLongValue];
+					UInt64 rootSize = [[self root] sizeValue];
 
-                //the root item must has finished calculating it's size, otherwise this doesn't work
-                size = totalSpaceVal
-                        - [[self root] sizeValue]
-                        - freeSpaceVal;
-            }
+					// Capacity values can be unavailable or temporarily inconsistent.
+					// Check each subtraction so unsigned arithmetic cannot wrap around.
+					if ( rootSize <= totalSpaceVal && freeSpaceVal <= totalSpaceVal - rootSize )
+						size = totalSpaceVal - rootSize - freeSpaceVal;
+				}
+			}
 			break;
 	}
 	
@@ -747,8 +751,8 @@ NSString* FSItemLoadingFailedException = @"FSItemLoadingFailedException";
 #undef TESTTYPE
     
     // add TIFF is this is an image
-    if ( UTTypeConformsTo((__bridge CFStringRef)uti, kUTTypeImage) )
-        [types addObject: NSTIFFPboardType];
+	if ( uti != nil && UTTypeConformsTo((__bridge CFStringRef)uti, kUTTypeImage) )
+		[types addObject: NSTIFFPboardType];
 
 	return types;
 }
@@ -761,11 +765,11 @@ NSString* FSItemLoadingFailedException = @"FSItemLoadingFailedException";
 	return [type isEqualToString: NSFilenamesPboardType]
 			|| [type isEqualToString: NSStringPboardType]
 			|| [type isEqualToString: NSFileContentsPboardType]
-			|| ([type isEqualToString: NSTIFFPboardType] && UTTypeConformsTo((__bridge CFStringRef)uti, kUTTypeImage))
+			|| ([type isEqualToString: NSTIFFPboardType] && uti != nil && UTTypeConformsTo((__bridge CFStringRef)uti, kUTTypeImage))
 			|| ([type isEqualToString: NSRTFPboardType] && [uti isEqualToString:(__bridge NSString*)kUTTypeRTF])
-			|| ([type isEqualToString: NSRTFDPboardType] && [uti isEqualToString:(__bridge NSString*)kUTTypeFlatRTFD])
-			|| ([type isEqualToString: NSHTMLPboardType] && [uti isEqualToString:(__bridge NSString*)NSHTMLPboardType])
-			|| ([type isEqualToString: NSPDFPboardType] && [uti isEqualToString:(__bridge NSString*)NSPDFPboardType]);
+			|| ([type isEqualToString: NSRTFDPboardType] && [uti isEqualToString:(__bridge NSString*)kUTTypeRTFD])
+			|| ([type isEqualToString: NSHTMLPboardType] && [uti isEqualToString:(__bridge NSString*)kUTTypeHTML])
+			|| ([type isEqualToString: NSPDFPboardType] && [uti isEqualToString:(__bridge NSString*)kUTTypePDF]);
 }
 
 - (void) writeToPasteboard: (NSPasteboard*) pboard
@@ -813,7 +817,7 @@ NSString* FSItemLoadingFailedException = @"FSItemLoadingFailedException";
     {
         if ([uti isEqualToString: (__bridge NSString *)kUTTypeTIFF])
             [pboard setData:[NSData dataWithContentsOfFile:[url path]] forType:NSTIFFPboardType];
-        else if ( UTTypeConformsTo((__bridge CFStringRef)uti, kUTTypeImage) )
+		else if ( uti != nil && UTTypeConformsTo((__bridge CFStringRef)uti, kUTTypeImage) )
         {
             // open the image and return TIFFRepresentation
             NSImage *image = [[[NSImage alloc] initWithContentsOfFile:[url path]] autorelease];

@@ -372,11 +372,11 @@
 	if ( [menuItem isKindOfClass: [NSToolbarItemValidationAdapter class]] )\
 		 [menuItem setState: (condition) ? NSOffState : NSOnState];
 	
-    if ( menuAction == @selector(openFile:)
+	if ( menuAction == @selector(openFile:)
 		 || menuAction == @selector(openFileWith:) )
-    {
-        if ( selectedItem == nil )
-			NO;
+	{
+		if ( selectedItem == nil )
+				return NO;
 		
 		AppsForItem *apps = [AppsForItem appsForItemURL: [selectedItem fileURL]];
 		return [apps defaultAppURL] != nil;
