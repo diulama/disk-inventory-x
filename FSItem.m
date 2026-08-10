@@ -74,8 +74,6 @@ NSString* FSItemLoadingFailedException = @"FSItemLoadingFailedException";
 
 - (id) initWithPath: (NSString *) path
 {
-    self = [super init];
-    
     NSURL * url = [[[NSURL alloc] initFileURLWithPath:path] autorelease];
     
     return [self initWithURL:url];

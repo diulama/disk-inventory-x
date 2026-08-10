@@ -101,7 +101,7 @@
 
 - (void) dealloc
 {
-	[[NSNotificationCenter defaultCenter] removeObserver: self];
+	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver: self];
 
     [_volumes release];
 	[_progressIndicators release];
