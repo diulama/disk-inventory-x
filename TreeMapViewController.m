@@ -317,7 +317,6 @@
 	
 	if ( [theOption isEqualToString: ShowPackageContents]
 		 || [theOption isEqualToString: ShowPhysicalFileSize]
-		 || [theOption isEqualToString: IgnoreCreatorCode]
 		 || [theOption isEqualToString: ShowOtherSpace]
 		 || [theOption isEqualToString: ShowFreeSpace] )
 	{

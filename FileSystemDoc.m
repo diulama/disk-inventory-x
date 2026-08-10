@@ -419,24 +419,6 @@ NSString *OldItem = @"OldItem";
 	[self postViewOptionChangedNotificationForOption: ShowOtherSpace];
 }
 
-- (BOOL) ignoreCreatorCode
-{
-	return [[self viewOptions] ignoreCreatorCode];
-}
-
-- (void) setIgnoreCreatorCode: (BOOL) ignoreIt
-{
-    /*
-	[[self viewOptions] setIgnoreCreatorCode: ignoreIt];
-	
-	[[self rootItem] setKindStringIgnoringCreatorCode: ignoreIt includeChilds: YES];
-	
-	[self refreshFileKindStatistics];
-	
-	[self postViewOptionChangedNotificationForOption: IgnoreCreatorCode];
-     */
-}
-
 //helper method; returns YES/NO for packages in dependency of the showPackageContents-Flag
 - (BOOL) itemIsNode: (FSItem*) item
 {
@@ -899,11 +881,6 @@ NSString *OldItem = @"OldItem";
 	return YES;
 }
 
-- (BOOL) fsItemShouldIgnoreCreatorCode: (FSItem*) item
-{
-	return [self ignoreCreatorCode];
-}
-
 - (BOOL) fsItemShouldLookIntoPackages: (FSItem*) item
 {
 	return [self showPackageContents];
@@ -1213,4 +1190,3 @@ NSString *OldItem = @"OldItem";
 
 
 @end
-

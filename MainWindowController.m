@@ -321,13 +321,6 @@
 	[self synchronizeWindowTitleWithDocumentName];
 }
 
-- (IBAction) ignoreCreatorCode:(id) sender
-{
-	FileSystemDoc *doc = [self document];
-	
-	[doc setIgnoreCreatorCode: ![doc ignoreCreatorCode]];
-}
-
 - (IBAction) performRenderBenchmark:(id)sender
 {
 	uint64_t startTime = getTime();
@@ -428,10 +421,6 @@
     else if ( menuAction == @selector(showPhysicalSizes:) )
     {
         SET_TITLE_AND_IMAGE( [doc showPhysicalFileSize], @"Show Logical File Size", @"Show Physical File Size" );
-    }
-    else if ( menuAction == @selector(ignoreCreatorCode:) )
-    {
-        SET_TITLE_AND_IMAGE( [doc ignoreCreatorCode], @"Respect Creator Code", @"Ignore Creator Code" );
     }
     else if ( menuAction == @selector(toggleFileKindsDrawer:) )
     {

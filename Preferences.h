@@ -13,7 +13,6 @@
 extern NSString *ShowPackageContents;
 extern NSString *ShowFreeSpace;
 extern NSString *ShowOtherSpace;
-extern NSString *IgnoreCreatorCode;
 extern NSString *ShowPhysicalFileSize; //logical size otherwise (like the Finder)
 extern NSString *UseSmallFontInKindStatistic;
 extern NSString *UseSmallFontInFilesView;
@@ -44,9 +43,6 @@ extern NSString *ShareKindColors;
 
 - (BOOL) showOtherSpace;
 - (void) setShowOtherSpace: (BOOL) value;
-
-- (BOOL) ignoreCreatorCode;
-- (void) setIgnoreCreatorCode: (BOOL) value;
 
 - (BOOL) showPhysicalFileSize;
 - (void) setShowPhysicalFileSize: (BOOL) value;

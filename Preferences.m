@@ -13,7 +13,6 @@
 NSString *ShowPackageContents			= @"ShowPackageContents";
 NSString *ShowFreeSpace					= @"ShowFreeSpace";
 NSString *ShowOtherSpace				= @"ShowOtherSpace";
-NSString *IgnoreCreatorCode				= @"IgnoreCreatorCode";
 NSString *ShowPhysicalFileSize			= @"ShowPhysicalFileSize"; //logical size otherwise (like the Finder)
 NSString *UseSmallFontInKindStatistic	= @"UseSmallFontInKindStatisticView";
 NSString *UseSmallFontInFilesView		= @"UseSmallFontInFilesView";
@@ -120,16 +119,6 @@ NSString *ShareKindColors				= @"ShareKindColors";
 	[self setBoolValue: value forKey: ShowOtherSpace];
 }
 
-- (BOOL) ignoreCreatorCode;
-{
-	return [self boolForKey: IgnoreCreatorCode];
-}
-
-- (void) setIgnoreCreatorCode: (BOOL) value
-{
-	[self setBoolValue: value forKey: IgnoreCreatorCode];
-}
-
 - (BOOL) showPhysicalFileSize
 {
 	return [self boolForKey: ShowPhysicalFileSize];
@@ -153,11 +142,9 @@ NSString *ShareKindColors				= @"ShareKindColors";
 	COPYVALUEBOOL( ShowPackageContents );
 	COPYVALUEBOOL( ShowFreeSpace );
 	COPYVALUEBOOL( ShowOtherSpace );
-	COPYVALUEBOOL( IgnoreCreatorCode );
 	COPYVALUEBOOL( ShowPhysicalFileSize );
 	
 #undef COPYVALUEBOOL
 }
 
 @end
-

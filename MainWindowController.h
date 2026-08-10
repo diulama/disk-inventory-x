@@ -39,8 +39,6 @@
 - (IBAction) changeSplitting:(id)sender;
 - (IBAction) showInformationPanel:(id)sender;
 - (IBAction) showPhysicalSizes:(id) sender;
-- (IBAction) ignoreCreatorCode:(id) sender;
-
 - (IBAction) performRenderBenchmark:(id)sender;
 - (IBAction) performLayoutBenchmark:(id)sender;
 @end

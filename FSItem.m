@@ -484,12 +484,6 @@ NSString* FSItemLoadingFailedException = @"FSItemLoadingFailedException";
 
 - (void) setKindString
 {
-	BOOL ignoreCreatorCode = NO;
-	
-	id delegate = [self delegate];
-	if ( [delegate respondsToSelector: @selector(fsItemShouldIgnoreCreatorCode:)] )
-		ignoreCreatorCode = [delegate fsItemShouldIgnoreCreatorCode: self];
-	
 	[self setKindStringIncludingChildren: NO];
 }
 
