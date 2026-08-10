@@ -31,7 +31,7 @@
 		
 		if ( [child isFolder] )
 		{
-			if ( lookInPackages || ![self isPackage] )
+			if ( lookInPackages || ![child isPackage] )
 				deepChildCount += [child deepFileCountIncludingPackages: lookInPackages];
 		}
 		else
