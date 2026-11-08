@@ -27,6 +27,7 @@ jobs:
       - name: Build
         run: |
           set -o pipefail
+          mkdir -p build
           xcodebuild \
             -project "Disk Inventory X.xcodeproj" \
             -scheme "Disk Inventory X" \
