@@ -1,0 +1,55 @@
+name: Build
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build (${{ matrix.configuration }})
+    runs-on: macos-15
+    strategy:
+      fail-fast: false
+      matrix:
+        configuration: [Debug, Release]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Show toolchain
+        run: xcodebuild -version && xcrun --show-sdk-version
+
+      - name: Build
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project "Disk Inventory X.xcodeproj" \
+            -scheme "Disk Inventory X" \
+            -configuration "${{ matrix.configuration }}" \
+            -destination "generic/platform=macOS" \
+            -derivedDataPath build/DerivedData \
+            CODE_SIGNING_ALLOWED=NO \
+            build 2>&1 | tee build/xcodebuild.log
+
+      - name: Summarize warnings
+        if: always()
+        run: |
+          echo "### ${{ matrix.configuration }} build warnings" >> "$GITHUB_STEP_SUMMARY"
+          grep -E ': warning: ' build/xcodebuild.log | sed -E 's#^.*/(.*): warning#\1: warning#' | sort -u > build/warnings.txt || true
+          echo "Total unique warnings: $(wc -l < build/warnings.txt)" >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          head -200 build/warnings.txt >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload app
+        if: matrix.configuration == 'Release'
+        uses: actions/upload-artifact@v4
+        with:
+          name: Disk-Inventory-X-unsigned
+          path: build/DerivedData/Build/Products/Release/Disk Inventory X.app
+          if-no-files-found: error
