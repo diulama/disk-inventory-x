@@ -24,7 +24,7 @@
 #import "NSURL-Extensions.h"
 
 @interface MainWindowController(Private)
-- (void) moveToTrashSheetDidDismiss: (NSWindow*) sheet returnCode: (int) returnCode contextInfo: (void*) contextInfo;
+- (void) performMoveToTrash: (FSItem*) selectedItem;
 @end
 
 @implementation MainWindowController
@@ -198,7 +198,7 @@
     FSItem *selectedItem = [(FileSystemDoc*)[self document] selectedItem];
 
     if ( selectedItem != nil && [selectedItem exists] )
-        [[NSWorkspace sharedWorkspace] selectFile: [selectedItem path] inFileViewerRootedAtPath: @""];
+        [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs: @[[NSURL fileURLWithPath: [selectedItem path]]]];
 }
 
 - (IBAction) refresh:(id)sender
@@ -239,22 +239,22 @@
 		NSString *msg = [NSString stringWithFormat: NSLocalizedString(@"The item \"%@\" could not be moved to the trash.",@""),
 													[selectedItem displayName]];
 
-		NSBeginAlertSheet( msg,
-                          NSLocalizedString(@"No",@""),
-                          NSLocalizedString(@"Yes",@""),
-						  nil,
-						  [self window],
-						  self,
-						  nil,
-						  @selector(moveToTrashSheetDidDismiss: returnCode: contextInfo:),
-						  selectedItem,
-						  @"%@", NSLocalizedString(@"Would you like to delete it immediately?",@""));
+		NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+		alert.alertStyle = NSAlertStyleWarning;
+		alert.messageText = msg;
+		alert.informativeText = NSLocalizedString(@"Would you like to delete it immediately?",@"");
+		[alert addButtonWithTitle: NSLocalizedString(@"No",@"")];
+		[alert addButtonWithTitle: NSLocalizedString(@"Yes",@"")];
+
+		[alert beginSheetModalForWindow: [self window] completionHandler: ^(NSModalResponse returnCode) {
+			// the block retains selectedItem until the sheet is dismissed
+			if ( returnCode == NSAlertSecondButtonReturn )
+				[self performMoveToTrash: selectedItem];
+		}];
 	}
 	else
 	{
-		[self moveToTrashSheetDidDismiss: nil
-							  returnCode: NSAlertAlternateReturn
-							 contextInfo: selectedItem];
+		[self performMoveToTrash: selectedItem];
 	}
 }
 
@@ -370,7 +370,7 @@
 #define SET_TITLE_AND_IMAGE( condition, string1, string2 )	\
 	SET_TITLE( (condition), string1, string2 );				\
 	if ( [menuItem isKindOfClass: [NSToolbarItemValidationAdapter class]] )\
-		 [menuItem setState: (condition) ? NSOffState : NSOnState];
+		 [menuItem setState: (condition) ? NSControlStateValueOff : NSControlStateValueOn];
 	
     if ( menuAction == @selector(openFile:)
 		 || menuAction == @selector(openFileWith:) )
@@ -600,15 +600,9 @@
 
 @implementation MainWindowController(Private)
 
-- (void) moveToTrashSheetDidDismiss: (NSWindow *) sheet
-						 returnCode: (int) returnCode
-						contextInfo: (void*) contextInfo
+- (void) performMoveToTrash: (FSItem*) selectedItem
 {
-	if ( returnCode != NSAlertAlternateReturn )
-		return;
-	
 	FileSystemDoc *doc = [self document];
-	FSItem *selectedItem = (FSItem*) contextInfo;
 	
 	NSParameterAssert(	selectedItem != nil
 						&& selectedItem != [doc zoomedItem] 
@@ -642,13 +636,12 @@
         NSString *msg = [NSString stringWithFormat: NSLocalizedString(@"\"%@\" cannot be moved to the trash by Disk Inventory X.",@""), [selectedItem displayName] ];
         NSString *subMsg = error.localizedFailureReason; //NSLocalizedString( @"Maybe you do not have sufficient access privileges.", @"" );
         
-        NSBeginInformationalAlertSheet( msg,
-                                       NSLocalizedString(@"OK",@""),
-                                       nil, nil,
-                                       [self window],
-                                       nil, NULL, NULL, nil,
-                                       @"%@",
-                                       subMsg );
+        NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+        alert.alertStyle = NSAlertStyleInformational;
+        alert.messageText = msg;
+        alert.informativeText = subMsg ?: @"";
+        [alert addButtonWithTitle: NSLocalizedString(@"OK",@"")];
+        [alert beginSheetModalForWindow: [self window] completionHandler: nil];
  	}
 }
 

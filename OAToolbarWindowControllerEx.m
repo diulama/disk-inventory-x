@@ -187,13 +187,13 @@ static NSMutableDictionary *g_toolbatStateImages = nil;
 	NSString *imageKey = nil;
 	switch( state )
 	{
-		case NSOnState:
+		case NSControlStateValueOn:
 			imageKey = @"imageName";
 			break;
-		case NSOffState:
+		case NSControlStateValueOff:
 			imageKey = @"imageNameOffState";
 			break;
-		case NSMixedState:
+		case NSControlStateValueMixed:
 			imageKey = @"imageNameMixedState";
 			break;
 		default:

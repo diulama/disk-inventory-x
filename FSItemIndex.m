@@ -131,26 +131,19 @@
 
 - (void) addItemsFromArray: (NSArray*) items
 {
-	unsigned int i = [items count];
-	
-	NSAutoreleasePool *localPool = (i > 200) ? [[NSAutoreleasePool alloc] init] : nil;
-	
-	unsigned poolLoopCount = 0;
-	
-	while ( i-- )
+	// drain temporary objects in batches to keep peak memory low for large folders
+	const NSUInteger batchSize = 200;
+	NSUInteger i = [items count];
+
+	while ( i > 0 )
 	{
-		[self addItem: [items objectAtIndex: i]];
-		
-		poolLoopCount++;
-		if ( poolLoopCount > 200 )
+		@autoreleasepool
 		{
-			poolLoopCount = 0;
-			[localPool release];
-			localPool = [[NSAutoreleasePool alloc] init];
+			NSUInteger batchEnd = (i > batchSize) ? i - batchSize : 0;
+			while ( i > batchEnd )
+				[self addItem: [items objectAtIndex: --i]];
 		}
 	}
-	
-	[localPool release];
 }
 
 - (NSArray*) searchItems: (NSString*) searchString inIndex: (FSItemIndexType) indexesToSearch

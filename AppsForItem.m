@@ -58,14 +58,10 @@
 	{
 		_defaultAppURL = (id) [NSNull null]; //retain not necessary for NSNull
 		
-		LSRolesMask RoleMask = kLSRolesViewer | kLSRolesEditor;
+		NSURL *appURL = [[NSWorkspace sharedWorkspace] URLForApplicationToOpenURL: [self itemURL]];
 
-        NSURL *appURL = (NSURL*)LSCopyDefaultApplicationURLForURL( (CFURLRef)[self itemURL], RoleMask, nil );
-        
 		if ( [self checkAppURL: appURL checkDefaultApp: NO] )
-			_defaultAppURL = appURL;
-        else
-            [appURL release];
+			_defaultAppURL = [appURL retain];
 	}
 	
 	return (_defaultAppURL == (id)[NSNull null]) ? nil : _defaultAppURL;
@@ -106,7 +102,13 @@
 
 + (void) openItemURL: (NSURL*) itemURL withAppURL: (NSURL*) appURL
 {
-	[[NSWorkspace sharedWorkspace] openFile: [itemURL path] withApplication: [appURL path]];
+	if ( itemURL == nil || appURL == nil )
+		return;
+
+	[[NSWorkspace sharedWorkspace] openURLs: @[itemURL]
+	                   withApplicationAtURL: appURL
+	                          configuration: [NSWorkspaceOpenConfiguration configuration]
+	                      completionHandler: nil];
 }
 
 @end
@@ -134,34 +136,34 @@
 
 // get a list of apps that can open a document
 // NOTE: this searches network volumes!!
-+ (NSArray<NSURL*>*) applicationURLsForItemURL:(NSURL*)inItemURL;
++ (NSArray<NSURL*>*) applicationURLsForItemURL:(NSURL*)inItemURL
 {
-    CFArrayRef outURLs;
-    NSMutableArray* result=nil;
-	
-    outURLs = LSCopyApplicationURLsForURL( (CFURLRef) inItemURL, kLSRolesViewer | kLSRolesEditor );
-    if (outURLs)
+    NSArray<NSURL*> *appURLs = nil;
+
+    if ( @available(macOS 12.0, *) )
     {
-        if ([(id)outURLs isKindOfClass:[NSArray class]])
-        {
-            result = [NSMutableArray arrayWithArray:(NSArray*)outURLs];
-            
-            // filter out .exe files
-            int i, cnt = [result count];
-            NSURL *url;
-            
-            for (i=(cnt-1);i>=0;i--)
-            {
-                url = [result objectAtIndex:i];
-                
-                if ([[[url path] pathExtension] caseInsensitiveCompare:@"exe"] == NSOrderedSame)
-                    [result removeObjectAtIndex:i];
-            }            
-        }
-        
-        CFRelease(outURLs);
+        appURLs = [[NSWorkspace sharedWorkspace] URLsForApplicationsToOpenURL: inItemURL];
     }
-	
+    else
+    {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        CFArrayRef cfURLs = LSCopyApplicationURLsForURL( (CFURLRef) inItemURL, kLSRolesViewer | kLSRolesEditor );
+#pragma clang diagnostic pop
+        appURLs = [(NSArray<NSURL*>*) cfURLs autorelease];
+    }
+
+    if ( appURLs == nil )
+        return @[];
+
+    // filter out .exe files
+    NSIndexSet *exeIndexes = [appURLs indexesOfObjectsPassingTest: ^BOOL(NSURL *url, NSUInteger idx, BOOL *stop) {
+        return [[url pathExtension] caseInsensitiveCompare: @"exe"] == NSOrderedSame;
+    }];
+
+    NSMutableArray<NSURL*> *result = [NSMutableArray arrayWithArray: appURLs];
+    [result removeObjectsAtIndexes: exeIndexes];
+
     return result;
 }
 

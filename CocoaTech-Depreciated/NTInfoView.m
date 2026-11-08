@@ -10,8 +10,9 @@
 #import "NTTitledInfoPair.h"
 #import "AppsForItem.h"
 #import "NSURL-Extensions.h"
+#import <sys/stat.h>
 
-#pragma warning "ID3 support removed"
+// TODO: ID3 support removed
 //#import "NTID3Helper.h"
 
 @interface NTInfoView (Private)
@@ -118,9 +119,9 @@
     
     // set small scrollbars
     if ([scrollView verticalScroller])
-        [[scrollView verticalScroller] setControlSize:NSSmallControlSize];
+        [[scrollView verticalScroller] setControlSize:NSControlSizeSmall];
     if ([scrollView horizontalScroller])
-        [[scrollView horizontalScroller] setControlSize:NSSmallControlSize];
+        [[scrollView horizontalScroller] setControlSize:NSControlSizeSmall];
     
     contentRect = [scrollView bounds];
     contentRect.size = [scrollView contentSize];
@@ -250,7 +251,7 @@
                     [infoPairs addObject:[NTTitledInfoPair infoPair:NSLocalizedString(@"Application:",@"") info:[appURL displayName]]];
             }
         }
-#pragma warning "ID3 support disabled"
+// TODO: ID3 support disabled
 /*
         if ([typeID isMP3])
         {
@@ -290,7 +291,7 @@
         
         [infoPairs addObjectsFromArray:[self sizePairs]];
         
-#pragma warning "to be reimplemented using NSURL & co"
+// TODO: to be reimplemented using NSURL & co
 /*
         [infoPairs addObject:[NTTitledInfoPair infoPair:NSLocalizedString(@"Modified:",@"") info:[[_desc modificationDate] dateString:kLongDate relative:NO]]];
         [infoPairs addObject:[NTTitledInfoPair infoPair:NSLocalizedString(@"Created:",@"") info:[[_desc creationDate] dateString:kLongDate relative:NO]]];
@@ -325,7 +326,7 @@
                 [infoPairs addObject:[NTTitledInfoPair infoPair:NSLocalizedString(@"Application:",@"") info:[appDesc displayName]]];
         }
 */
-#pragma warning "ID3 support removed"
+// TODO: ID3 support removed
         // mp3
        /*
        if ([typeID isMP3])
@@ -335,7 +336,7 @@
         }
         */
 
-#pragma warning "to be reimplemented using NSURL & co"
+// TODO: to be reimplemented using NSURL & co
 /*
          NTVolume *volume = [_desc volume];
          
@@ -355,7 +356,7 @@
 {
     NSMutableArray* infoPairs = [NSMutableArray arrayWithCapacity:2];
 
-    #pragma warning "to be reimplemented using NSURL & co"
+    // TODO: to be reimplemented using NSURL & co
     /*
 
     if ([_desc isFile])
@@ -418,8 +419,6 @@
     }
 }
 
-
-#import <sys/stat.h>
 
 + (NSString*) permissionStringForURL: (NSURL*) URL
 {

@@ -9,8 +9,6 @@
 #import "NTFilePasteboardSource.h"
 #import "NSURL-Extensions.h"
 
-// SNG 666 add NSPICTPboardType
-
 @interface NTFilePasteboardSource (Private)
 - (NSArray<NSString*>*)pasteboardTypes:(NSArray<NSPasteboardType> *)types;
 @end
@@ -36,27 +34,25 @@
 + (NSArray<NSPasteboardType>*)defaultTypes;
 {
     return [NSArray arrayWithObjects:
-        NSTIFFPboardType,
-        NSPDFPboardType,
-        NSPostScriptPboardType,
+        NSPasteboardTypeTIFF,
+        NSPasteboardTypePDF,
 
-        NSRTFPboardType,
-        NSRTFDPboardType,
-        NSHTMLPboardType,
+        NSPasteboardTypeRTF,
+        NSPasteboardTypeRTFD,
+        NSPasteboardTypeHTML,
 
         NSFileContentsPboardType,
 
         NSFilenamesPboardType,
-        NSStringPboardType,
+        NSPasteboardTypeString,
         nil];
 }
 
 + (NSArray<NSPasteboardType>*)imageTypes;
 {
     return [NSArray arrayWithObjects:
-        NSTIFFPboardType,
-        NSPDFPboardType,
-        NSPostScriptPboardType,
+        NSPasteboardTypeTIFF,
+        NSPasteboardTypePDF,
         nil];
 }
 
@@ -98,19 +94,19 @@
             {
                 if ([type isEqualToString:NSFilenamesPboardType])
                     [pasteTypes addObject:type];
-                else if ([type isEqualToString:NSStringPboardType])
+                else if ([type isEqualToString:NSPasteboardTypeString])
                     [pasteTypes addObject:type];
                 else if ([type isEqualToString:NSFileContentsPboardType])
                     [pasteTypes addObject:type];
-                else if ([type isEqualToString:NSTIFFPboardType]) // we use the icon if not an image, so don't check isImage && [identifier isImage])
+                else if ([type isEqualToString:NSPasteboardTypeTIFF]) // we use the icon if not an image, so don't check isImage && [identifier isImage])
                     [pasteTypes addObject:type];
-                else if ([type isEqualToString:NSRTFPboardType] && [uti isEqualToString: (__bridge NSString *)kUTTypeRTF])
+                else if ([type isEqualToString:NSPasteboardTypeRTF] && [uti isEqualToString: UTTypeRTF.identifier])
                     [pasteTypes addObject:type];
-                else if ([type isEqualToString:NSRTFDPboardType] && [uti isEqualToString: (__bridge NSString *)kUTTypeFlatRTFD])
+                else if ([type isEqualToString:NSPasteboardTypeRTFD] && [uti isEqualToString: UTTypeFlatRTFD.identifier])
                     [pasteTypes addObject:type];
-                else if ([type isEqualToString:NSHTMLPboardType] && [uti isEqualToString: (__bridge NSString *)kUTTypeHTML])
+                else if ([type isEqualToString:NSPasteboardTypeHTML] && [uti isEqualToString: UTTypeHTML.identifier])
                     [pasteTypes addObject:type];
-                else if ([type isEqualToString:NSPDFPboardType] && [uti isEqualToString: (__bridge NSString *)kUTTypePDF])
+                else if ([type isEqualToString:NSPasteboardTypePDF] && [uti isEqualToString: UTTypePDF.identifier])
                     [pasteTypes addObject:type];
             }
 
@@ -141,21 +137,21 @@
 
                 [pboard setPropertyList:pathsArray forType:NSFilenamesPboardType];
             }
-            else if ([type isEqualToString:NSStringPboardType])
+            else if ([type isEqualToString:NSPasteboardTypeString])
             {
                 // set the path
-                [pboard setString:[url path] forType:NSStringPboardType];
+                [pboard setString:[url path] forType:NSPasteboardTypeString];
             }
             else if ([type isEqualToString:NSFileContentsPboardType])
             {
                 // write the contents
                 [pboard writeFileContents:[url path]];
             }
-            else if ([type isEqualToString:NSTIFFPboardType])
+            else if ([type isEqualToString:NSPasteboardTypeTIFF])
             {
-                if ([uti isEqualToString: (__bridge NSString *)kUTTypeTIFF])
-                    [pboard setData:[NSData dataWithContentsOfFile:[url path]] forType:NSTIFFPboardType];
-                else if ( UTTypeConformsTo((__bridge CFStringRef)uti, kUTTypeImage) )
+                if ([uti isEqualToString: UTTypeTIFF.identifier])
+                    [pboard setData:[NSData dataWithContentsOfFile:[url path]] forType:NSPasteboardTypeTIFF];
+                else if ( (uti != nil && [[UTType typeWithIdentifier:uti] conformsToType:UTTypeImage]) )
                 {
                     // open the image and return TIFFRepresentation
                     NSImage *image = [[[NSImage alloc] initWithContentsOfFile:[url path]] autorelease];
@@ -165,12 +161,12 @@
                         NSData* data = [image TIFFRepresentation];
 
                         if (data)
-                            [pboard setData:data forType:NSTIFFPboardType];
+                            [pboard setData:data forType:NSPasteboardTypeTIFF];
                     }
                 }
                 else // else send the icon
                 {
-#pragma warning "NTFilePasteBoardSource: providing file icon not implemented"
+// TODO: providing the file icon is not implemented
  /*                   // open the image and return TIFFRepresentation
                     NSImage* image = [NSImage iconRef:[[desc icon] iconRef] toImage:128 label:[desc label] select:NO];
 
@@ -179,33 +175,33 @@
                         NSData* data = [image TIFFRepresentation];
 
                         if (data)
-                            [pboard setData:data forType:NSTIFFPboardType];
+                            [pboard setData:data forType:NSPasteboardTypeTIFF];
                     }                    
  */
                 }
             }
-            else if ([type isEqualToString:NSRTFPboardType])
+            else if ([type isEqualToString:NSPasteboardTypeRTF])
             {
-                if ([uti isEqualToString: (__bridge NSString *)kUTTypeRTF])
-                    [pboard setData:[NSData dataWithContentsOfFile:[url path]] forType:NSRTFPboardType];
+                if ([uti isEqualToString: UTTypeRTF.identifier])
+                    [pboard setData:[NSData dataWithContentsOfFile:[url path]] forType:NSPasteboardTypeRTF];
             }
-            else if ([type isEqualToString:NSRTFDPboardType])
+            else if ([type isEqualToString:NSPasteboardTypeRTFD])
             {
-                if ([uti isEqualToString: (__bridge NSString *)kUTTypeFlatRTFD])
+                if ([uti isEqualToString: UTTypeFlatRTFD.identifier])
                 {
-                    NSFileWrapper *tempRTFDData = [[[NSFileWrapper alloc] initWithPath:[url path]] autorelease];
-                    [pboard setData:[tempRTFDData serializedRepresentation] forType:NSRTFDPboardType];
+                    NSFileWrapper *tempRTFDData = [[[NSFileWrapper alloc] initWithURL:url options:0 error:NULL] autorelease];
+                    [pboard setData:[tempRTFDData serializedRepresentation] forType:NSPasteboardTypeRTFD];
                 }
             }
-            else if ([type isEqualToString:NSHTMLPboardType])
+            else if ([type isEqualToString:NSPasteboardTypeHTML])
             {
-                if ([uti isEqualToString: (__bridge NSString *)kUTTypeHTML])
-                    [pboard setData:[NSData dataWithContentsOfFile:[url path]] forType:NSHTMLPboardType];
+                if ([uti isEqualToString: UTTypeHTML.identifier])
+                    [pboard setData:[NSData dataWithContentsOfFile:[url path]] forType:NSPasteboardTypeHTML];
             }
-            else if ([type isEqualToString:NSPDFPboardType])
+            else if ([type isEqualToString:NSPasteboardTypePDF])
             {
-                if ([uti isEqualToString: (__bridge NSString *)kUTTypePDF])
-                    [pboard setData:[NSData dataWithContentsOfFile:[url path]] forType:NSPDFPboardType];
+                if ([uti isEqualToString: UTTypePDF.identifier])
+                    [pboard setData:[NSData dataWithContentsOfFile:[url path]] forType:NSPasteboardTypePDF];
             }
         }
     }

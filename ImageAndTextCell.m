@@ -176,19 +176,16 @@
         imageFrame.origin.x += IMAGE_OFFSET;
         imageFrame.size = imageSize;
 
-        if ([controlView isFlipped])
-            imageFrame.origin.y += ceil((cellFrame.size.height + imageFrame.size.height) / 2);
-        else
-            imageFrame.origin.y += ceil((cellFrame.size.height - imageFrame.size.height) / 2);
+        // drawInRect:...respectFlipped:YES draws upright in flipped views, so the
+        // rect's origin is its top-left corner there and no flip correction is needed
+        imageFrame.origin.y += ceil((cellFrame.size.height - imageFrame.size.height) / 2);
 
-       //[_image drawInRect: imageFrame
-       //          fromRect: NSZeroRect/*entire image*/
-       //         operation: NSCompositeSourceOver
-       //          fraction: 1.0/*opaque*/
-       //    respectFlipped: YES
-       //             hints: nil];
-       
-       [_image compositeToPoint:imageFrame.origin operation:NSCompositeSourceOver];
+        [_image drawInRect: imageFrame
+                  fromRect: NSZeroRect /*entire image*/
+                 operation: NSCompositingOperationSourceOver
+                  fraction: 1.0 /*opaque*/
+            respectFlipped: YES
+                     hints: nil];
     }
     
     NSString *truncatedString = [ImageAndTextCell stringByTruncatingToWidth: NSWidth(cellFrame)
