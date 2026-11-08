@@ -22,9 +22,9 @@ Apple Silicon port by Keita Ikeda: https://github.com/KeitaIkeda/disk-inventory-
 
 ## Download
 
-Pre-built binaries are available on the [Releases](https://github.com/diulama/disk-inventory-x/releases) page.
+This fork doesn't publish prebuilt binaries. To get the app, build it from source (see [Building](#building)), or download the unsigned `Disk-Inventory-X-unsigned` artifact from a successful [Build workflow](https://github.com/diulama/disk-inventory-x/actions/workflows/build.yml) run.
 
-> **Note:** The app is not signed with an Apple Developer ID, so macOS blocks it on first launch. To open it:
+> **Note:** The app isn't signed with an Apple Developer ID, so macOS blocks a downloaded copy on first launch. To open it:
 > 1. Right-click the app → **Open** → **Open** in the dialog
 > 2. Or: **System Settings → Privacy & Security → Open Anyway**
 > 3. Or run: `xattr -cr "Disk Inventory X.app"`
