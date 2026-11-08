@@ -806,10 +806,9 @@ NSString* FSItemLoadingFailedException = @"FSItemLoadingFailedException";
 
 	if ( !isFolder )
 	{
-		 if ( usePhysicalSize )
-			[self setSize: [url physicalSize]];
-		 else
-			[self setSize: [url logicalSize]];
+		// sockets and some special files report no size
+		NSNumber *size = usePhysicalSize ? [url physicalSize] : [url logicalSize];
+		[self setSize: size ?: @0];
 	}
     else
         _childs = [[NSMutableArray<FSItem*> alloc] init];
