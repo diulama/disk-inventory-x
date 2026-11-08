@@ -41,6 +41,18 @@
 
 @end
 
+#pragma mark - NSAlert (DIXAdditions)
+
+@interface NSAlert (DIXAdditions)
+
+// Shows an informational alert with a single OK button: as a sheet on `window`
+// if one is given, otherwise app-modal. Replaces NSBeginInformationalAlertSheet().
++ (void) dix_showInformationalAlertWithMessage: (NSString *) message
+                               informativeText: (NSString *) informativeText
+                                     forWindow: (NSWindow *) window;
+
+@end
+
 #pragma mark - NSTableView (OAReplacements)
 
 @interface NSTableView (OAReplacements)

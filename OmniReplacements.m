@@ -76,6 +76,28 @@
 
 @end
 
+#pragma mark - NSAlert (DIXAdditions)
+
+@implementation NSAlert (DIXAdditions)
+
++ (void) dix_showInformationalAlertWithMessage: (NSString *) message
+                               informativeText: (NSString *) informativeText
+                                     forWindow: (NSWindow *) window
+{
+    NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+    alert.alertStyle = NSAlertStyleInformational;
+    alert.messageText = message ?: @"";
+    alert.informativeText = informativeText ?: @"";
+    [alert addButtonWithTitle: NSLocalizedString(@"OK", @"")];
+
+    if ( window != nil )
+        [alert beginSheetModalForWindow: window completionHandler: nil];
+    else
+        [alert runModal];
+}
+
+@end
+
 #pragma mark - NSTableView (OAReplacements)
 
 @implementation NSTableView (OAReplacements)

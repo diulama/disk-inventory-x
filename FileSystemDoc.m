@@ -565,13 +565,9 @@ NSString *OldItem = @"OldItem";
         NSString *msg = [NSString stringWithFormat: @"\"%@\" does not exist any more.", [[self rootItem] displayPath]];
         NSString *subMsg = NSLocalizedString( @"The folder will remain visible in Disk Inventory X, but the files cannot be accessed (e.g. shown in the Finder).",@"");
         
-        NSBeginInformationalAlertSheet( msg,
-                                       NSLocalizedString(@"OK",@""),
-                                       nil, nil,
-                                       [[[self windowControllers] objectAtIndex: 0] window],
-                                       nil, NULL, NULL, nil,
-                                       @"%@",
-                                       subMsg );
+        [NSAlert dix_showInformationalAlertWithMessage: msg
+                                       informativeText: subMsg
+                                             forWindow: [[[self windowControllers] firstObject] window]];
 
 		return;
 	}
@@ -611,13 +607,9 @@ NSString *OldItem = @"OldItem";
 		else
 		{
 			//error
-            NSBeginInformationalAlertSheet( NSLocalizedString( @"The folder's content could not be loaded.", @""),
-                                           NSLocalizedString(@"OK",@""),
-                                           nil, nil,
-                                           [[[self windowControllers] objectAtIndex: 0] window],
-                                           nil, NULL, NULL, nil,
-                                           @"%@",
-                                           [localException reason] );
+            [NSAlert dix_showInformationalAlertWithMessage: NSLocalizedString( @"The folder's content could not be loaded.", @"")
+                                           informativeText: [localException reason]
+                                                 forWindow: [[[self windowControllers] firstObject] window]];
 
 		}
 		NS_VOIDRETURN;

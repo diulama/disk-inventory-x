@@ -84,7 +84,9 @@
 			}
 		}
 		
-		[_additionalAppURLs sortOnAttribute: @selector(name) usingSelector: @selector(caseInsensitiveCompare:)];
+		[_additionalAppURLs sortUsingComparator: ^NSComparisonResult(NSURL *url1, NSURL *url2) {
+			return [[url1 name] caseInsensitiveCompare: [url2 name]];
+		}];
 	}
 	
 	return _additionalAppURLs;

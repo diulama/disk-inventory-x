@@ -111,7 +111,7 @@ BOOL g_EnableLogging;
 	
 	for ( NSURL *dir in fileNames )
 	{
-		[self openDocumentWithContentsOfFile: [dir path] display: YES];
+		[self openDocumentWithContentsOfFile: [dir path]];
 	}
 }
 
@@ -150,13 +150,12 @@ BOOL g_EnableLogging;
 
 - (IBAction) showPreferencesPanel: (id) sender
 {
-	[[PrefsPanelController sharedPreferenceController] showPreferencesPanel: self];
-	//[[OAPreferenceController sharedPreferenceController] showPreferencesPanel: self];
+	[[PrefsPanelController sharedPreferenceController] showPreferencesPanel];
 }
 
 - (IBAction) gotoHomepage: (id) sender
 {
-	[[NSWorkspace sharedWorkspace] openURL: [NSURL URLWithString: @"http://www.derlien.com"]];
+	[[NSWorkspace sharedWorkspace] openURL: [NSURL URLWithString: @"https://www.derlien.com"]];
 }
 
 - (IBAction) closeDonationPanel: (id) sender;

@@ -339,7 +339,7 @@
 	uint64_t doneTime = getTime();
 	
 	NSString *msg = [NSString stringWithFormat: @"rendering %u times took %.2f seconds", count, subtractTime(doneTime, startTime)];
-	NSBeginInformationalAlertSheet( msg, nil, nil, nil, [_splitter window], nil, nil, nil, nil, @"" );
+	[NSAlert dix_showInformationalAlertWithMessage: msg informativeText: nil forWindow: [_splitter window]];
 }
 
 - (IBAction) performLayoutBenchmark:(id)sender
@@ -353,7 +353,7 @@
 	uint64_t doneTime = getTime();
 	
 	NSString *msg = [NSString stringWithFormat: @"layout calculation %u times took %.2f seconds", count, subtractTime(doneTime, startTime)];
-	NSBeginInformationalAlertSheet( msg, nil, nil, nil, [_splitter window], nil, nil, nil, nil, @"" );
+	[NSAlert dix_showInformationalAlertWithMessage: msg informativeText: nil forWindow: [_splitter window]];
 }
 
 #pragma mark -----------------UI elment validation-----------------------
@@ -636,12 +636,7 @@
         NSString *msg = [NSString stringWithFormat: NSLocalizedString(@"\"%@\" cannot be moved to the trash by Disk Inventory X.",@""), [selectedItem displayName] ];
         NSString *subMsg = error.localizedFailureReason; //NSLocalizedString( @"Maybe you do not have sufficient access privileges.", @"" );
         
-        NSAlert *alert = [[[NSAlert alloc] init] autorelease];
-        alert.alertStyle = NSAlertStyleInformational;
-        alert.messageText = msg;
-        alert.informativeText = subMsg ?: @"";
-        [alert addButtonWithTitle: NSLocalizedString(@"OK",@"")];
-        [alert beginSheetModalForWindow: [self window] completionHandler: nil];
+        [NSAlert dix_showInformationalAlertWithMessage: msg informativeText: subMsg forWindow: [self window]];
  	}
 }
 

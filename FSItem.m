@@ -661,13 +661,6 @@ NSString* FSItemLoadingFailedException = @"FSItemLoadingFailedException";
 
 #pragma mark -----------------pasteboard support-----------------------
 
-// UTType for this item (nil if it could not be determined)
-- (UTType*) utType
-{
-    NSString *uti = [[self fileURL] cachedUTI];
-    return (uti == nil) ? nil : [UTType typeWithIdentifier: uti];
-}
-
 
 - (NSArray<NSPasteboardType>*) supportedPasteboardTypes
 {
@@ -789,6 +782,13 @@ NSString* FSItemLoadingFailedException = @"FSItemLoadingFailedException";
 
 @implementation FSItem(Private)
 
+// UTType for this item (nil if it could not be determined)
+- (UTType*) utType
+{
+    NSString *uti = [[self fileURL] cachedUTI];
+    return (uti == nil) ? nil : [UTType typeWithIdentifier: uti];
+}
+
 - (id) initWithURL: (NSURL*)url
             parent: (FSItem*) parent
      setKindString: (BOOL) setKindString
@@ -811,9 +811,9 @@ NSString* FSItemLoadingFailedException = @"FSItemLoadingFailedException";
 	if ( !isFolder )
 	{
 		 if ( usePhysicalSize )
-			[self setSizeValue: [url physicalSize]];
+			[self setSize: [url physicalSize]];
 		 else
-			[self setSizeValue: [url logicalSize]];
+			[self setSize: [url logicalSize]];
 	}
     else
         _childs = [[NSMutableArray<FSItem*> alloc] init];
