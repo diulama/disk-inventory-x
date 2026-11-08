@@ -8,6 +8,8 @@ A macOS disk usage visualizer using treemaps. This fork adds Apple Silicon (arm6
 
 Original project by Tjark Derlien: https://gitlab.com/tderlien/disk-inventory-x
 
+Apple Silicon port by Keita Ikeda: https://github.com/KeitaIkeda/disk-inventory-x
+
 ## Changes from upstream
 
 - Universal Binary (arm64 + x86_64), minimum deployment target macOS 11 (Big Sur)
@@ -77,6 +79,7 @@ app with `scripts/build-release.sh` and attaches the zip to a draft GitHub relea
 
 GPL-3.0. See [COPYING](COPYING).
 
-## Original Author
+## Authors
 
-Tjark Derlien
+- Tjark Derlien: original author
+- Keita Ikeda: Apple Silicon port, Omni framework removal, and static-review fixes
