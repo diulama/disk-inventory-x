@@ -146,7 +146,7 @@ NSString *contentArrayBindingContext = @"contentArrayBindingContext";
 
 		NSArray *newObjects = nil;
 		
-		if ( [newObjects isKindOfClass: [NSArray class]] ) //NSArray, NSMutableArray
+		if ( [collection isKindOfClass: [NSArray class]] ) //NSArray, NSMutableArray
 			newObjects = collection;
 		else if ( [collection respondsToSelector: @selector(allValues)] ) //NSDictionary
 			newObjects = [collection allValues];
@@ -388,7 +388,6 @@ NSString *contentArrayBindingContext = @"contentArrayBindingContext";
 
 
 @end
-
 
 
 

@@ -321,13 +321,6 @@
 	[self synchronizeWindowTitleWithDocumentName];
 }
 
-- (IBAction) ignoreCreatorCode:(id) sender
-{
-	FileSystemDoc *doc = [self document];
-	
-	[doc setIgnoreCreatorCode: ![doc ignoreCreatorCode]];
-}
-
 - (IBAction) performRenderBenchmark:(id)sender
 {
 	uint64_t startTime = getTime();
@@ -372,11 +365,11 @@
 	if ( [menuItem isKindOfClass: [NSToolbarItemValidationAdapter class]] )\
 		 [menuItem setState: (condition) ? NSControlStateValueOff : NSControlStateValueOn];
 	
-    if ( menuAction == @selector(openFile:)
+	if ( menuAction == @selector(openFile:)
 		 || menuAction == @selector(openFileWith:) )
-    {
-        if ( selectedItem == nil )
-			NO;
+	{
+		if ( selectedItem == nil )
+				return NO;
 		
 		AppsForItem *apps = [AppsForItem appsForItemURL: [selectedItem fileURL]];
 		return [apps defaultAppURL] != nil;
@@ -428,10 +421,6 @@
     else if ( menuAction == @selector(showPhysicalSizes:) )
     {
         SET_TITLE_AND_IMAGE( [doc showPhysicalFileSize], @"Show Logical File Size", @"Show Physical File Size" );
-    }
-    else if ( menuAction == @selector(ignoreCreatorCode:) )
-    {
-        SET_TITLE_AND_IMAGE( [doc ignoreCreatorCode], @"Respect Creator Code", @"Ignore Creator Code" );
     }
     else if ( menuAction == @selector(toggleFileKindsDrawer:) )
     {

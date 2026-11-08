@@ -70,9 +70,6 @@
 - (void) setShowFreeSpace: (BOOL) show;
 - (BOOL) showOtherSpace;
 - (void) setShowOtherSpace: (BOOL) show;
-- (BOOL) ignoreCreatorCode;
-- (void) setIgnoreCreatorCode: (BOOL) ignoreIt;
-
 - (BOOL) itemIsNode: (FSItem*) item; //helper method; returns YES/NO for packages depending on the showPackageContents-Flag
 
 - (FSItem*) rootItem;

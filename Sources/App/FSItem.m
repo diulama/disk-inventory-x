@@ -76,8 +76,6 @@ NSString* FSItemLoadingFailedException = @"FSItemLoadingFailedException";
 
 - (id) initWithPath: (NSString *) path
 {
-    self = [super init];
-    
     NSURL * url = [[[NSURL alloc] initFileURLWithPath:path] autorelease];
     
     return [self initWithURL:url];
@@ -445,18 +443,22 @@ NSString* FSItemLoadingFailedException = @"FSItemLoadingFailedException";
 			break;
 			
 		case OtherSpaceItem:
-            {
-                NSNumber *totalSpace = [[self fileURL] getCachedNumberValue: NSURLVolumeTotalCapacityKey];
-                NSNumber *freeSpace = [[self fileURL] getCachedNumberValue: NSURLVolumeAvailableCapacityKey];
+			{
+				NSNumber *totalSpace = [[self fileURL] getCachedNumberValue: NSURLVolumeTotalCapacityKey];
+				NSNumber *freeSpace = [[self fileURL] getCachedNumberValue: NSURLVolumeAvailableCapacityKey];
 
-                UInt64 totalSpaceVal = totalSpace == nil ? 0 : [totalSpace unsignedLongLongValue];
-                UInt64 freeSpaceVal = freeSpace == nil ? 0 : [freeSpace unsignedLongLongValue];
+				if ( totalSpace != nil && freeSpace != nil )
+				{
+					UInt64 totalSpaceVal = [totalSpace unsignedLongLongValue];
+					UInt64 freeSpaceVal = [freeSpace unsignedLongLongValue];
+					UInt64 rootSize = [[self root] sizeValue];
 
-                //the root item must has finished calculating it's size, otherwise this doesn't work
-                size = totalSpaceVal
-                        - [[self root] sizeValue]
-                        - freeSpaceVal;
-            }
+					// Capacity values can be unavailable or temporarily inconsistent.
+					// Check each subtraction so unsigned arithmetic cannot wrap around.
+					if ( rootSize <= totalSpaceVal && freeSpaceVal <= totalSpaceVal - rootSize )
+						size = totalSpaceVal - rootSize - freeSpaceVal;
+				}
+			}
 			break;
 	}
 	
@@ -482,12 +484,6 @@ NSString* FSItemLoadingFailedException = @"FSItemLoadingFailedException";
 
 - (void) setKindString
 {
-	BOOL ignoreCreatorCode = NO;
-	
-	id delegate = [self delegate];
-	if ( [delegate respondsToSelector: @selector(fsItemShouldIgnoreCreatorCode:)] )
-		ignoreCreatorCode = [delegate fsItemShouldIgnoreCreatorCode: self];
-	
 	[self setKindStringIncludingChildren: NO];
 }
 
@@ -1027,7 +1023,7 @@ NSString* FSItemLoadingFailedException = @"FSItemLoadingFailedException";
     
     [itemStack release];
     
-	[self recalculateSize:YES updateParent:NO];
+	[self recalculateSize:usePhysicalSize updateParent:NO];
 }
 
 //compare the size of 2 FSItems
@@ -1089,4 +1085,3 @@ NSString* FSItemLoadingFailedException = @"FSItemLoadingFailedException";
 }
 
 @end
-

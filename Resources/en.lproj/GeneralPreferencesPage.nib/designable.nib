@@ -133,17 +133,6 @@
                         <binding destination="8" name="value" keyPath="values.ShowPhysicalFileSize" id="23"/>
                     </connections>
                 </button>
-                <button imageHugsTitle="YES" id="20">
-                    <rect key="frame" x="245" y="291" width="245" height="18"/>
-                    <autoresizingMask key="autoresizingMask"/>
-                    <buttonCell key="cell" type="check" title="Ignore Creator Code" bezelStyle="regularSquare" imagePosition="leading" alignment="left" inset="2" id="58">
-                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                        <font key="font" metaFont="system"/>
-                    </buttonCell>
-                    <connections>
-                        <binding destination="8" name="value" keyPath="values.IgnoreCreatorCode" id="22"/>
-                    </connections>
-                </button>
                 <textField verticalHuggingPriority="750" id="16">
                     <rect key="frame" x="-3" y="265" width="235" height="70"/>
                     <autoresizingMask key="autoresizingMask"/>

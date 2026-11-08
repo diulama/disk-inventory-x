@@ -258,11 +258,6 @@ CA
                                     <action selector="showPhysicalSizes:" target="-1" id="270"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Ignorer le code créateur" id="271">
-                                <connections>
-                                    <action selector="ignoreCreatorCode:" target="-1" id="273"/>
-                                </connections>
-                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="215">
                                 <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                             </menuItem>

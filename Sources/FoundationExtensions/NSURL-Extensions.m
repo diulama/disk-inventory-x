@@ -127,7 +127,7 @@ void LoadFirmlinks()
     
     // fallback to NSURLFileSizeKey
     if ( fileSizeBytes == nil )
-        [self getNumberValue: NSURLFileSizeKey];
+        fileSizeBytes = [self getNumberValue: NSURLFileSizeKey];
  
     return fileSizeBytes;
 }
@@ -139,7 +139,7 @@ void LoadFirmlinks()
     
     // fallback to NSURLTotalFileSizeKey
     if ( fileSizeBytes == nil )
-        [self getNumberValue: NSURLTotalFileSizeKey];
+        fileSizeBytes = [self getNumberValue: NSURLTotalFileSizeKey];
     
     return fileSizeBytes;
 }
@@ -307,7 +307,7 @@ void LoadFirmlinks()
     
     // fallback to NSURLFileSizeKey
     if ( fileSizeBytes == nil )
-        [self getCachedNumberValue: NSURLFileSizeKey];
+        fileSizeBytes = [self getCachedNumberValue: NSURLFileSizeKey];
     
     return fileSizeBytes;
 }
@@ -319,7 +319,7 @@ void LoadFirmlinks()
     
     // fallback to NSURLTotalFileSizeKey
     if ( fileSizeBytes == nil )
-        [self getCachedNumberValue: NSURLTotalFileSizeKey];
+        fileSizeBytes = [self getCachedNumberValue: NSURLTotalFileSizeKey];
     
     return fileSizeBytes;
 }
